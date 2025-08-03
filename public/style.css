@@ -1,0 +1,240 @@
+:root {
+  --primary-color: #00eaff;
+  --primary-hover: #00c8d6;
+  --bg-color: #0f1115;
+  --card-bg: #1a1c23;
+  --accent: #ff3c3c;
+  --text-color: #eaeaea;
+  --muted-text: #a0a0a0;
+  --input-bg: #1f222b;
+  --shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+  --radius: 12px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  margin: 0;
+  padding: 2rem;
+  line-height: 1.6;
+}
+
+h1 {
+  font-family: 'Orbitron', sans-serif;
+  font-size: 2.8rem;
+  color: var(--primary-color);
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+h2 {
+  font-size: 1.5rem;
+  color: var(--muted-text);
+  text-align: center;
+  margin: 1.5rem 0;
+}
+
+.container {
+  max-width: 720px;
+  margin: auto;
+  padding: 1.5rem;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+li {
+  background-color: var(--card-bg);
+  padding: 18px 20px;
+  border-radius: var(--radius);
+  margin: 12px 0;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  animation: fadeIn 0.5s ease-in-out;
+}
+
+li:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.4);
+}
+
+input, button, select {
+  padding: 14px;
+  width: 100%;
+  border: none;
+  margin: 12px 0;
+  border-radius: var(--radius);
+  font-size: 1rem;
+  font-family: inherit;
+  outline: none;
+  transition: all 0.3s ease;
+}
+
+input {
+  background-color: var(--input-bg);
+  color: var(--text-color);
+  border: 1px solid transparent;
+}
+
+input:focus {
+  border: 1px solid var(--primary-color);
+  background-color: #2a2d36;
+}
+
+button {
+  background-color: var(--primary-color);
+  color: #000;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+}
+
+button:hover {
+  background-color: var(--primary-hover);
+  transform: scale(1.02);
+}
+
+.qr-box {
+  text-align: center;
+  margin: 30px 0;
+}
+
+.ticket-card {
+  background-color: var(--card-bg);
+  padding: 20px;
+  border-radius: var(--radius);
+  margin-bottom: 20px;
+  border-left: 5px solid var(--primary-color);
+  box-shadow: var(--shadow);
+}
+
+.ticket-card button {
+  width: auto;
+  padding: 10px 16px;
+  margin-right: 12px;
+  margin-top: 10px;
+  font-size: 0.95rem;
+  border-radius: 8px;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  body {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 2rem;
+  }
+
+  .container {
+    padding: 1rem;
+  }
+
+  li, .ticket-card {
+    padding: 14px;
+  }
+
+  input, button {
+    padding: 12px;
+  }
+}
+
+
+
+
+
+
+
+
+
+/* Theme Toggle Styles */
+.theme-toggle {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 52px;
+  height: 28px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background-color: #ccc;
+  transition: 0.4s;
+  border-radius: 34px;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 3px;
+  background-color: white;
+  border-radius: 50%;
+  transition: 0.4s;
+}
+
+input:checked + .slider {
+  background-color: var(--primary-color);
+}
+
+input:checked + .slider:before {
+  transform: translateX(24px);
+}
+
+/* Light Mode Overrides */
+body.light {
+  --bg-color: #f0f3f5;
+  --card-bg: #ffffff;
+  --text-color: #111;
+  --muted-text: #555;
+  --input-bg: #e0e5e9;
+}
+
+body.light h1 {
+  color: #008fa0;
+}
+
+body.light button {
+  background: #008fa0;
+  color: white;
+}
+
+body.light button:hover {
+  background: #00707e;
+}
+
+

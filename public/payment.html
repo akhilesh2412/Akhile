@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Payment</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>Complete Payment</h1>
+
+    <div class="qr-box">
+      <img src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=upi://pay?pa=admin@upi&pn=EsportsEvent" alt="QR Code" />
+    </div>
+
+    <h2 id="countdown">Payment Expires in: 5:00</h2>
+
+    <form id="utrForm">
+      <input type="text" placeholder="Enter UTR Number" required />
+      <button type="submit">Submit UTR</button>
+    </form>
+  </div>
+
+  <script type="module">
+    import { db, doc, updateDoc } from './firebase.js';
+
+    let time = 300;
+    const countdownEl = document.getElementById("countdown");
+
+    const timer = setInterval(() => {
+      let mins = Math.floor(time / 60);
+      let secs = time % 60;
+      countdownEl.textContent = `Payment Expires in: ${mins}:${secs.toString().padStart(2, '0')}`;
+      if (--time < 0) {
+        clearInterval(timer);
+        alert("Payment time expired!");
+        window.location.href = 'index.html';
+      }
+    }, 1000);
+
+    document.getElementById("utrForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const utr = e.target[0].value.trim();
+      const ticket = JSON.parse(localStorage.getItem("currentTicket"));
+
+      if (!ticket?.id) {
+        alert("Ticket data not found.");
+        return;
+      }
+
+      try {
+        const docRef = doc(db, "tickets", ticket.id);
+        await updateDoc(docRef, {
+          utr,
+          status: "pending"
+        });
+
+        localStorage.removeItem("currentTicket");
+        alert("UTR submitted! Awaiting admin approval.");
+        window.location.href = 'index.html';
+      } catch (err) {
+        console.error("UTR Submission Failed:", err);
+        alert("Failed to submit UTR. Try again.");
+      }
+    });
+  </script>
+  <script>
+  const toggle = document.getElementById('themeToggle');
+  const currentTheme = localStorage.getItem('theme');
+
+  if (currentTheme === 'light') {
+    document.body.classList.add('light');
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener('change', () => {
+    document.body.classList.toggle('light');
+    const theme = document.body.classList.contains('light') ? 'light' : 'dark';
+    localStorage.setItem('theme', theme);
+  });
+</script>
+
+</body>
+</html>

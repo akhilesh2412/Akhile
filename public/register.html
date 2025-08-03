@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Register Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    .player-group {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+    .player-entry {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .player-entry input[type="text"] {
+      flex: 1;
+    }
+    .leader-radio {
+      accent-color: #0fd;
+    }
+    .form-group {
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Team Registration</h1>
+    <form id="teamForm">
+      <div class="form-group">
+        <input type="text" id="teamName" placeholder="Team Name" required />
+      </div>
+
+      <div class="player-group">
+        <div class="player-entry">
+          <input type="text" placeholder="Player 1 Name" required />
+          <label><input type="radio" name="leader" value="0" class="leader-radio" required /> Leader</label>
+        </div>
+        <div class="player-entry">
+          <input type="text" placeholder="Player 2 Name" required />
+          <label><input type="radio" name="leader" value="1" class="leader-radio" /> Leader</label>
+        </div>
+        <div class="player-entry">
+          <input type="text" placeholder="Player 3 Name" required />
+          <label><input type="radio" name="leader" value="2" class="leader-radio" /> Leader</label>
+        </div>
+        <div class="player-entry">
+          <input type="text" placeholder="Player 4 Name" required />
+          <label><input type="radio" name="leader" value="3" class="leader-radio" /> Leader</label>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <input type="tel" placeholder="Mobile Number" required />
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Email ID" required />
+      </div>
+
+      <button type="submit">Proceed to Payment</button>
+    </form>
+  </div>
+
+  <!-- ✅ Firebase Firestore Integration -->
+  <script type="module">
+    import { db, collection } from './firebase.js';
+    import { addDoc } from "https://www.gstatic.com/firebasejs/10.5.2/firebase-firestore.js";
+
+    document.getElementById("teamForm").addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const teamName = document.getElementById("teamName").value.trim();
+      const textInputs = document.querySelectorAll(".player-group input[type='text']");
+      const players = Array.from(textInputs).map(input => input.value.trim());
+
+      const leaderIndex = document.querySelector("input[name='leader']:checked")?.value;
+      if (leaderIndex === undefined) {
+        alert("Please select a team leader.");
+        return;
+      }
+
+      const leaderName = players[parseInt(leaderIndex)];
+      const mobile = document.querySelector("input[type=tel]").value.trim();
+      const email = document.querySelector("input[type=email]").value.trim();
+
+      const ticket = {
+        teamName,
+        players,
+        leader: leaderName,
+        mobile,
+        email,
+        status: "pending",
+        utr: ""
+      };
+
+      try {
+        const docRef = await addDoc(collection(db, "tickets"), ticket);
+        ticket.id = docRef.id;
+        localStorage.setItem("currentTicket", JSON.stringify(ticket));
+        window.location.href = "payment.html";
+      } catch (err) {
+        console.error("Firestore Error:", err);
+        alert("Registration failed. Please try again.");
+      }
+    });
+  </script>
+
+  <script>
+  const toggle = document.getElementById('themeToggle');
+  const currentTheme = localStorage.getItem('theme');
+
+  if (currentTheme === 'light') {
+    document.body.classList.add('light');
+    toggle.checked = true;
+  }
+
+  toggle.addEventListener('change', () => {
+    document.body.classList.toggle('light');
+    const theme = document.body.classList.contains('light') ? 'light' : 'dark';
+    localStorage.setItem('theme', theme);
+  });
+</script>
+
+</body>
+</html>
